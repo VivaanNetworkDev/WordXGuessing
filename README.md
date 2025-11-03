@@ -162,8 +162,8 @@ If your bot is experiencing slow response times, you can set up a local Telegram
 - **[WordXGuessing Bot](https://t.me/WordXGuessingBot)** - Start playing now!
 
 ## Community
-- **Join the Official Group**: [WordXGuessing Community](https://t.me/WordGuesser) - Play the game, discuss strategies, and share feedback.
-- **Support the Developer**: [Binamra Bots Channel](https://t.me/BinamraBots)
+- **Join the Official Group**: [WordXGuessing Community](https://t.me/TheGlobalHub) - Play the game, discuss strategies, and share feedback.
+- **Support the Developer**: [VivaanNetwork Channel](https://t.me/VivaanNetwork)
 - **Contact the Developer**: Have suggestions or issues? Reach out on Telegram: [@EliteSid](https://t.me/EliteSid)
 
 ## Contributing
