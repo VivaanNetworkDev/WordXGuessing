@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { env } from "../config/env";
 import { redis } from "../config/redis";
 
-const FAILED_KEYS_KEY = `seek-gemini:failed_keys`;
+const FAILED_KEYS_KEY = `wordxguessing-gemini:failed_keys`;
 const RETRY_AFTER_MINUTES = 30;
 
 export class APIKeyManager {

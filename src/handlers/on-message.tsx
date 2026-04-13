@@ -62,7 +62,7 @@ composer.on("message:text", async (ctx) => {
       if (result.data.date !== todayDate) {
         await redis.del(`daily_wordle:${userId}`);
         return ctx.reply(
-          "Your previous game has expired. Please start today's WordSeek with /daily",
+          "Your previous game has expired. Please start today's WordXGuessing with /daily",
         );
       }
 
@@ -201,7 +201,7 @@ async function handleDailyWordleGuess(ctx: Context, currentGuess: string) {
 
   if (!dailyWord) {
     return ctx.reply(
-      "Today's WordSeek is not available. Please try again later.",
+      "Today's WordXGuessing is not available. Please try again later.",
     );
   }
 
@@ -374,7 +374,7 @@ export function generateWordleShareText(
     return result.join("");
   });
 
-  return `WordSeek ${attemptLine}\n\n${lines.join("\n")}\nTry yourself by using /daily command.`;
+  return `WordXGuessing ${attemptLine}\n\n${lines.join("\n")}\nTry yourself by using /daily command.`;
 }
 
 async function handleDailyWordleLoss(

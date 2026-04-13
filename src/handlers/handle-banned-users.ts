@@ -14,7 +14,7 @@ composer.on("message", async (ctx, next) => {
   if (!isUserBanned) return await next();
 
   const keyboard = new InlineKeyboard();
-  keyboard.url("Appeal", "t.me/binamralamsal").primary();
+  keyboard.url("Appeal", "t.me/IFlexElite").primary();
   const banMessage =
     "⚠️ You have been banned from bot for cheating using automated scripts!";
 

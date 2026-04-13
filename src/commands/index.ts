@@ -12,7 +12,7 @@ import { myScoreCommand } from "./my-score";
 import { newGameCommand } from "./new-game";
 import { unbanCommand } from "./unban-user";
 import { dailyWordleCommand } from "./daily";
-import { seekAuthCommand } from "./seekauth";
+import { wordXAuthCommand } from "./wordxauth";
 import { transferCommand } from "./transfer";
 import { broadcastCommand } from "./broadcast";
 import { startMatchCommand } from "./startmatch";
@@ -35,7 +35,7 @@ composer.use(
   unbanCommand,
   leaderboardCommand,
   scoreCommand,
-  seekAuthCommand,
+  wordXAuthCommand,
   startMatchCommand,
   setGameTopicCommand,
   unsetGameTopicCommand,

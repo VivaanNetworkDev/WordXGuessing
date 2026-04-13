@@ -25,7 +25,7 @@ composer.command("start", async (ctx) => {
     .url("💓 Donate", DONATION_LINK)
     .success();
 
-  const caption = `<b>Welcome to WordSeek!</b>
+  const caption = `<b>Welcome to WordXGuessing!</b>
 
 A fun and competitive Wordle-style game that you can play directly on Telegram.
 

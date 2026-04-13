@@ -16,7 +16,7 @@ composer.on("my_chat_member", async (ctx) => {
   ) {
     if (chat.type === "group" || chat.type === "supergroup") {
       return ctx.reply(
-        `<b>Thanks for adding WordSeek!</b>
+        `<b>Thanks for adding WordXGuessing!</b>
 
 <blockquote>To function correctly in your group, I need permission to read messages.
 Please make me an <b>administrator</b> with only the required permissions listed below.</blockquote>

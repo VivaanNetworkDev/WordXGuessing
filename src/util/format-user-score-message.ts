@@ -30,11 +30,11 @@ export function formatUserScoreMessage(
     data.highestStreak !== null ? data.highestStreak.toString() : "0";
 
   return `
-<blockquote><strong>🏆 Regular WordSeek Scores</strong></blockquote>
+<blockquote><strong>🏆 Regular WordXGuessing Scores</strong></blockquote>
 <b>${mentionLink}</b> has a total score of <b>${totalScore}</b> ${scopeText}.
 Their rank is <b>#${rank}</b>.
 
-<blockquote><strong>🔥 Daily WordSeek Stats</strong></blockquote>
+<blockquote><strong>🔥 Daily WordXGuessing Stats</strong></blockquote>
 <b>Current Streak:</b> ${currentStreak} days
 <b>Highest Streak:</b> ${highestStreak} days`.trim();
 }

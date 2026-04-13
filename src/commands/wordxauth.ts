@@ -1,4 +1,4 @@
-import { Composer, Context } from "grammy";
+import { CommandContext, Composer, Context } from "grammy";
 
 import { sql } from "kysely";
 
@@ -126,7 +126,7 @@ export async function getTargetUser(
   return null;
 }
 
-composer.command("seekauth", async (ctx) => {
+async function handleWordXAuthCommand(ctx: CommandContext<Context>) {
   if (!ctx.chat || !ctx.from) return;
 
   const chatId = ctx.chat.id.toString();
@@ -148,7 +148,7 @@ composer.command("seekauth", async (ctx) => {
     );
   }
 
-  const args = ctx.match?.trim();
+  const args = ctx.match.trim();
 
   const parts = args.split(" ");
   const action = parts[0]!.toLowerCase();
@@ -176,7 +176,7 @@ composer.command("seekauth", async (ctx) => {
       .join("\n");
 
     return await ctx.reply(
-      `<b>🔐 Authorized Users for Seek Game</b>\n\n${userList}`,
+      `<b>🔐 Authorized Users for WordXGuessing</b>\n\n${userList}`,
       replyConfig,
     );
   }
@@ -247,11 +247,14 @@ composer.command("seekauth", async (ctx) => {
     `✅ <b>${userName}</b> is now authorized to end the game without voting!`,
     replyConfig,
   );
-});
+}
+
+composer.command("wordxauth", handleWordXAuthCommand);
+composer.command("seekauth", handleWordXAuthCommand);
 
 CommandsHelper.addNewCommand(
-  "seekauth",
-  "Manage users authorized to end the seek game (admin only)",
+  "wordxauth",
+  "Manage users authorized to end WordXGuessing games (admin only)",
 );
 
-export const seekAuthCommand = composer;
+export const wordXAuthCommand = composer;

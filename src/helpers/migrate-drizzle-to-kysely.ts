@@ -1,6 +1,6 @@
 import { SQL } from "bun";
 
-const sourceDb = new SQL("postgres://postgres:1234@localhost:5432/wordseek");
+const sourceDb = new SQL("postgres://postgres:1234@localhost:5432/wordxguessing");
 
 interface SourceUser {
   id: number;
@@ -111,7 +111,7 @@ async function generateMigrationSql(): Promise<void> {
 
     let sqlContent = `-- Migration SQL File (COPY format)
 -- Generated on ${new Date().toISOString()}
--- Source: wordseek database
+-- Source: wordxguessing database
 
 SET client_encoding = 'UTF8';
 

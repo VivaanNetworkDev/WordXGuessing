@@ -1,6 +1,6 @@
-export const UPDATES_CHANNEL = "https://t.me/WordSeek";
-export const DISCUSSION_GROUP = "https://t.me/WordGuesser";
-export const DONATION_LINK = "https://buymemomo.com/binamra";
+export const UPDATES_CHANNEL = "https://t.me/VivaanUpdates";
+export const DISCUSSION_GROUP = "https://t.me/WordXGuessing";
+export const DONATION_LINK = "https://litter.catbox.moe/8alts169pnxumw23.jpg";
 
 export const allowedChatSearchKeys = ["global", "group"] as const;
 export const allowedChatTimeKeys = [

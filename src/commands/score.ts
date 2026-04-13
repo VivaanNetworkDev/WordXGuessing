@@ -1,6 +1,6 @@
 import { Composer } from "grammy";
 
-import { getTargetUser } from "./seekauth";
+import { getTargetUser } from "./wordxauth";
 import { CommandsHelper } from "../util/commands-helper";
 import { getUserScores } from "../services/get-user-scores";
 import { getSmartDefaults } from "../util/get-smart-defaults";

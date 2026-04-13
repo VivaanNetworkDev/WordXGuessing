@@ -1,5 +1,5 @@
-# WordSeek
-<img width="1173" alt="Group 40 5" src="https://github.com/user-attachments/assets/bf444d36-2eea-4ad5-83e7-4a99acda2bfe" />
+# WordXGuessing
+<img width="1173" alt="WordXGuessing banner" src="./src/data/banner.png" />
 
 ## Features
 - Play the Wordle-inspired word guessing game in private chats or group chats.
@@ -24,6 +24,7 @@
 - **/new** - Start a new game.
 - **/end** - End the current game (admins only in group chats).
 - **/help** - Get help with commands and game rules.
+- **/daily** - Play WordXGuessing of the Day in private chat.
 - **/leaderboard** - View leaderboards for the group or globally. Example:
   ```
   /leaderboard global week
@@ -34,6 +35,7 @@
   /score @username group
   ```
 - **/stats** - View bot usage stats (admin users only).
+- **/wordxauth** - Manage users authorized to end games without a vote (admins only).
 
 ## Installation & Setup
 
@@ -46,8 +48,8 @@
 ### Steps
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/binamralamsal/WordSeek
-   cd WordSeek
+   git clone https://github.com/VivaanNetworkDev/WordXGuessing
+   cd WordXGuessing
    ```
 
 2. **Install dependencies**:
@@ -91,7 +93,7 @@
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `BOT_TOKEN` | Your Telegram bot token from BotFather | `123456789:ABCdefGHIjklMNOpqrsTUVwxyz` |
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:password@localhost:5432/wordseek` |
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:password@localhost:5432/wordxguessing` |
 | `NODE_ENV` | Environment mode | `development` or `production` |
 | `REDIS_URI` | Redis connection string | `redis://127.0.0.1:6379` |
 
@@ -104,13 +106,12 @@
 - **Zod**: Schema validation and type safety.
 
 ## Try the Bot
-- **[WordSeek I](https://t.me/WordSeekBot)** *(Main bot)*
-- **[WordSeek II](https://t.me/WordSeek2Bot)** *(Use this if the main bot is busy)*
+- **[WordXGuessing](https://t.me/WordXGuessingBot)** *(Main bot)*
 
 ## Community
-- **Join the Official Group**: [Word Guesser Group](https://t.me/wordguesser) - Play the game, discuss strategies, and share feedback.
-- **Support the Developer**: [Binamra Bots Channel](https://t.me/BinamraBots)
-- **Contact the Developer**: Have suggestions or issues? Reach out on Telegram: [@binamralamsal](https://t.me/binamralamsal)
+- **Join the Official Group**: [Word X Guessers Group](https://t.me/WordXGuessing) - Play the game, discuss strategies, and share feedback.
+- **Support the Developer**: [Vivaan Support Channel](https://t.me/VivaanUpdates)
+- **Contact the Developer**: Have suggestions or issues? Reach out on Telegram: [@IFlexElite](https://t.me/IFlexElite)
 
 ## Contributing
 We welcome contributions to enhance the bot! Here's how you can help:
@@ -144,9 +145,9 @@ We welcome contributions to enhance the bot! Here's how you can help:
 
 ### Getting Help
 If you encounter issues:
-1. Check the [Issues](https://github.com/binamralamsal/WordSeek/issues) page on GitHub.
-2. Join the [Word Guesser Group](https://t.me/wordguesser) for community support.
-3. Contact the developer directly: [@binamralamsal](https://t.me/binamralamsal)
+1. Check the [Issues](https://github.com/VivaanNetworkDev/WordXGuessing/issues) page on GitHub.
+2. Join the [Word X Guessers Group](https://t.me/WordXGuessing) for community support.
+3. Contact the developer directly: [@IFlexElite](https://t.me/IFlexElite)
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.

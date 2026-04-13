@@ -4,14 +4,16 @@ import { db } from "../config/db";
 import { redis } from "../config/redis";
 import { dailyWordleSchema } from "../handlers/on-message";
 
-type GuardResult = { ok: true } | { ok: false; message: string };
+type GuardResult =
+  | { ok: true; message?: never }
+  | { ok: false; message: string };
 
 export async function requirePrivateChat(ctx: Context): Promise<GuardResult> {
   if (!ctx.chat || ctx.chat.type !== "private") {
     return {
       ok: false,
       message:
-        "WordSeek of the Day can only be played in private chat with the bot. Send me a message directly!",
+        "WordXGuessing of the Day can only be played in private chat with the bot. Send me a message directly!",
     };
   }
   return { ok: true };
@@ -30,7 +32,7 @@ export async function requireNoActiveDailyGame(
     return {
       ok: false,
       message:
-        "⚠️ You have an active WordSeek of the Day game in your private chat. Please pause it with /pausedaily before playing regular WordSeek.",
+        "⚠️ You have an active WordXGuessing of the Day game in your private chat. Please pause it with /pausedaily before playing regular WordXGuessing.",
     };
   }
   return { ok: true };
@@ -50,7 +52,7 @@ async function requireNoActiveRegularGame(ctx: Context): Promise<GuardResult> {
     return {
       ok: false,
       message:
-        "⚠️ You have an active regular WordSeek game. Please complete or end that game with /end before starting WordSeek of the Day.",
+        "⚠️ You have an active regular WordXGuessing game. Please complete or end that game with /end before starting WordXGuessing of the Day.",
     };
   }
   return { ok: true };

@@ -48,7 +48,7 @@ export async function errorHandler(error: BotError<Context>) {
       );
       try {
         const createdTopic = await ctx.createForumTopic(
-          topic.name || "WordSeek",
+          topic.name || "WordXGuessing",
           {
             icon_custom_emoji_id: topic.iconCustomEmojiId ?? undefined,
           },

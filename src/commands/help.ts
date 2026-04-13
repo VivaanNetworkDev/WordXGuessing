@@ -79,7 +79,7 @@ export function getMainHelpKeyboard(
       )
       .style(active == "admin" ? "primary" : undefined);
   }
-  keyboard.url("GitHub Repo", "https://github.com/binamralamsal/WordSeek");
+  keyboard.url("GitHub Repo", "https://github.com/VivaanNetworkDev/WordXGuessing");
   keyboard.row().url("📢 Updates", UPDATES_CHANNEL);
   keyboard.url("💓 Donate", DONATION_LINK).success();
   keyboard.url("💬 Discussion", DISCUSSION_GROUP);
@@ -90,7 +90,7 @@ export function getMainHelpKeyboard(
 export function getHowToPlayMessage() {
   const timezoneLabel = getTimezoneLabel();
 
-  return `<b>▸ How to Play WordSeek</b>
+  return `<b>▸ How to Play WordXGuessing</b>
 
 <blockquote>1. Start a game using /new, /new4, /new5, or /new6
 2. Guess the hidden word
@@ -115,7 +115,7 @@ export function getHowToPlayMessage() {
 • /new6 - Start a 6-letter game
 • /end - End current game (voting or admin only)
 • /help - Show this help menu
-• /daily - Play Daily WordSeek (private chat only)
+• /daily - Play Daily WordXGuessing (private chat only)
 • /pausedaily - Pause Daily mode and go back to normal games
 
 <b>Daily Mode (Private Chat Only):</b>
@@ -124,9 +124,9 @@ export function getHowToPlayMessage() {
 • You only get 6 guesses per daily puzzle
 • A new puzzle unlocks every day at 06:00 in <code>${timezoneLabel}</code>
 • You build a streak by solving the daily puzzle without failing
-• You cannot play normal WordSeek and Daily at the same time:
+• You cannot play normal WordXGuessing and Daily at the same time:
   - If a normal game is running, end it before using /daily
-  - If Daily is active, use /pausedaily to play normal WordSeek again</blockquote>`;
+  - If Daily is active, use /pausedaily to play normal WordXGuessing again</blockquote>`;
 }
 
 export function getScoresMessage() {
@@ -182,12 +182,12 @@ export function getGroupSettingsMessage() {
   return `<b>▸ Group Settings (Admin Only)</b>
 
 <b>Authorized Users</b>
-<blockquote><b>/seekauth</b> – Manage users who can end games without a vote.
+<blockquote><b>/wordxauth</b> – Manage users who can end games without a vote.
 
 <b>Usage:</b>
-• <code>/seekauth @username</code> – Authorize a user
-• <code>/seekauth remove @username</code> – Remove authorization
-• <code>/seekauth list</code> – List all authorized users
+• <code>/wordxauth @username</code> – Authorize a user
+• <code>/wordxauth remove @username</code> – Remove authorization
+• <code>/wordxauth list</code> – List all authorized users
 
 You can also use a user ID or reply to a message instead of @username.</blockquote>
 
