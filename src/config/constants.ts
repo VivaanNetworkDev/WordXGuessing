@@ -1,6 +1,7 @@
 export const UPDATES_CHANNEL = "https://t.me/VivaanUpdates";
 export const DISCUSSION_GROUP = "https://t.me/WordXGuessing";
-export const DONATION_LINK = "https://litter.catbox.moe/8alts169pnxumw23.jpg";
+export const DONATION_LINK =
+  "https://user.uploads.dev/file/2de1806023a663e29041e22027943842.jpg";
 
 export const allowedChatSearchKeys = ["global", "group"] as const;
 export const allowedChatTimeKeys = [
