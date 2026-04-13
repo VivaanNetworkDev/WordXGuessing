@@ -4,12 +4,40 @@ import { db } from "../config/db";
 
 const composer = new Composer();
 
+const BAN_CACHE_TTL_MS = 60_000;
+const banCache = new Map<string, { isBanned: boolean; expiresAt: number }>();
+
 composer.on("message", async (ctx, next) => {
-  const isUserBanned = await db
-    .selectFrom("bannedUsers")
-    .selectAll()
-    .where("userId", "=", ctx.from.id.toString())
-    .executeTakeFirst();
+  if (!ctx.from || !ctx.chat) return await next();
+
+  const text = ctx.message.text?.trim() ?? "";
+  const botMentioned =
+    ctx.message.reply_to_message?.from?.id.toString() === ctx.me.id.toString();
+  const shouldCheckBan =
+    ctx.chat.type === "private" ||
+    botMentioned ||
+    text.startsWith("/") ||
+    /^[a-z]{4,6}$/i.test(text);
+
+  if (!shouldCheckBan) return await next();
+
+  const userId = ctx.from.id.toString();
+  const cachedBan = banCache.get(userId);
+  let isUserBanned = cachedBan?.isBanned;
+
+  if (!cachedBan || cachedBan.expiresAt <= Date.now()) {
+    const bannedUser = await db
+      .selectFrom("bannedUsers")
+      .select("userId")
+      .where("userId", "=", userId)
+      .executeTakeFirst();
+
+    isUserBanned = !!bannedUser;
+    banCache.set(userId, {
+      isBanned: isUserBanned,
+      expiresAt: Date.now() + BAN_CACHE_TTL_MS,
+    });
+  }
 
   if (!isUserBanned) return await next();
 
@@ -23,11 +51,6 @@ composer.on("message", async (ctx, next) => {
       reply_markup: keyboard,
     });
   } else {
-    const me = ctx.me.id.toString();
-
-    const botMentioned =
-      ctx.message.reply_to_message?.from?.id.toString() === me;
-
     if (botMentioned) {
       return ctx.reply(banMessage, {
         reply_markup: keyboard,

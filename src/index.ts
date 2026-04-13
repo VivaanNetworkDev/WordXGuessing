@@ -28,7 +28,15 @@ bot.use(
     if (ctx.callbackQuery) return undefined;
     if (ctx.chat?.type === "private") return undefined;
 
-    return ctx.chatId?.toString() || ctx.from?.id.toString();
+    const text = ctx.message?.text?.trim();
+
+    if (!text) return undefined;
+    if (!text.startsWith("/") && !/^[a-z]{4,6}$/i.test(text)) {
+      return undefined;
+    }
+
+    const topicId = ctx.msg?.message_thread_id?.toString() || "general";
+    return ctx.chatId ? `${ctx.chatId}:${topicId}` : ctx.from?.id.toString();
   }),
 );
 

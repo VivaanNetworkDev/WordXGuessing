@@ -22,17 +22,29 @@ const composer = new Composer();
 
 type WordLength = 4 | 5 | 6;
 
-const ALL_WORDS: Record<WordLength, string[]> = {
-  4: allFourWords,
-  5: allFiveWords,
-  6: allSixWords,
-};
-
 const MODE_LABEL: Record<WordLength, string> = {
   4: "4-letter mode",
   5: "5-letter mode",
   6: "6-letter mode",
 };
+
+const ALL_WORD_SETS: Record<WordLength, Set<string>> = {
+  4: new Set(allFourWords),
+  5: new Set(allFiveWords),
+  6: new Set(allSixWords),
+};
+
+const PROGRESS_REPLY_INTERVAL_MS = 1200;
+const progressReplies = new Map<
+  number,
+  {
+    chatId: number;
+    lastSentAt: number;
+    latestMessage: string;
+    messageThreadId?: number;
+    timeout?: ReturnType<typeof setTimeout>;
+  }
+>();
 
 export const dailyWordleSchema = z.object({
   dailyWordId: z.number(),
@@ -40,13 +52,15 @@ export const dailyWordleSchema = z.object({
 });
 
 composer.on("message:text", async (ctx) => {
-  const currentGuess = ctx.message.text?.toLowerCase();
+  const currentGuess = ctx.message.text?.trim().toLowerCase();
 
   const isValidWord = /^[a-z]{4,6}$/.test(currentGuess ?? "");
 
   if (!isValidWord || currentGuess.startsWith("/")) {
     return;
   }
+
+  if (!ctx.from || !ctx.chat) return;
 
   const userId = ctx.from.id.toString();
   const chatId = ctx.chat.id.toString();
@@ -82,23 +96,23 @@ composer.on("message:text", async (ctx) => {
   if (!currentGame) return;
 
   const guard = await runGuards(ctx, [requireAllowedTopic]);
-  if (!guard.ok) return;
+  if (!guard.ok) return ctx.reply(guard.message);
 
   const wordLength = currentGame.word.length as WordLength;
-  const validWords = ALL_WORDS[wordLength];
+  const validWords = ALL_WORD_SETS[wordLength];
 
   if (currentGuess.length !== wordLength) return;
 
-  if (!validWords.includes(currentGuess))
+  if (!validWords.has(currentGuess))
     return ctx.reply(
       `${currentGuess} is not a valid ${wordLength}-letter word.`,
     );
 
   const guessExists = await db
     .selectFrom("guesses")
-    .selectAll()
+    .select("id")
     .where("guess", "=", currentGuess)
-    .where("chatId", "=", ctx.chat.id.toString())
+    .where("gameId", "=", currentGame.id)
     .executeTakeFirst();
 
   if (guessExists)
@@ -129,22 +143,30 @@ composer.on("message:text", async (ctx) => {
 
       const formattedResponse = `<blockquote>Congrats! You guessed it correctly.\nCorrect Word: <b>${currentGuess}</b>\n${additionalMessage}</blockquote>\nStart with /new${wordLength}`;
 
-      ctx.reply(formattedResponse, {
+      clearProgressReply(currentGame.id);
+      void ctx.reply(formattedResponse, {
         reply_parameters: { message_id: ctx.message.message_id },
         parse_mode: "HTML",
-      });
+      }).catch((error) =>
+        console.error("Failed to send win message:", error),
+      );
     } else {
       const additionalMessage = `Anonymous admins or channels don't get points.`;
 
       const formattedResponse = `<blockquote>Congrats! You guessed it correctly.\nCorrect Word: <b>${currentGuess}</b>\n</blockquote>${additionalMessage}\nStart with /new${wordLength}`;
 
-      ctx.reply(formattedResponse, {
+      clearProgressReply(currentGame.id);
+      void ctx.reply(formattedResponse, {
         reply_parameters: { message_id: ctx.message.message_id },
         parse_mode: "HTML",
-      });
+      }).catch((error) =>
+        console.error("Failed to send win message:", error),
+      );
     }
 
-    reactWithRandom(ctx);
+    void reactWithRandom(ctx).catch((error) =>
+      console.error("Failed to react to winning guess:", error),
+    );
     await db.deleteFrom("games").where("id", "=", currentGame.id).execute();
     return;
   }
@@ -167,11 +189,15 @@ composer.on("message:text", async (ctx) => {
 
   if (allGuesses.length === 30) {
     await db.deleteFrom("games").where("id", "=", currentGame.id).execute();
-    return ctx.reply(
+    clearProgressReply(currentGame.id);
+    void ctx.reply(
       "Game Over! The word was " +
         currentGame.word +
         `\nYou can start a new game with /new${wordLength}`,
+    ).catch((error) =>
+      console.error("Failed to send game over message:", error),
     );
+    return;
   }
 
   const modeLabel = MODE_LABEL[wordLength];
@@ -179,10 +205,71 @@ composer.on("message:text", async (ctx) => {
     `<i>${modeLabel} · ${allGuesses.length}/30</i>\n\n` +
     toFancyText(getFeedback(allGuesses, currentGame.word));
 
-  ctx.reply(responseMessage, {
-    parse_mode: "HTML",
-  });
+  queueProgressReply(ctx, currentGame.id, responseMessage);
 });
+
+function queueProgressReply(ctx: Context, gameId: number, message: string) {
+  const chatId = ctx.chat!.id;
+  const messageThreadId = ctx.msg?.message_thread_id;
+  const now = Date.now();
+  let state = progressReplies.get(gameId);
+
+  if (!state) {
+    state = {
+      chatId,
+      lastSentAt: 0,
+      latestMessage: message,
+      messageThreadId,
+    };
+    progressReplies.set(gameId, state);
+  }
+
+  state.chatId = chatId;
+  state.latestMessage = message;
+  state.messageThreadId = messageThreadId;
+
+  const send = () => {
+    state!.timeout = undefined;
+    state!.lastSentAt = Date.now();
+
+    const options = {
+      parse_mode: "HTML" as const,
+      ...(state!.messageThreadId
+        ? { message_thread_id: state!.messageThreadId }
+        : {}),
+    };
+
+    void ctx.api
+      .sendMessage(state!.chatId, state!.latestMessage, options)
+      .catch((error) =>
+        console.error("Failed to send game progress message:", error),
+      );
+  };
+
+  const delay = Math.max(
+    0,
+    PROGRESS_REPLY_INTERVAL_MS - (now - state.lastSentAt),
+  );
+
+  if (delay === 0 && !state.timeout) {
+    send();
+    return;
+  }
+
+  if (!state.timeout) {
+    state.timeout = setTimeout(send, delay);
+  }
+}
+
+function clearProgressReply(gameId: number) {
+  const state = progressReplies.get(gameId);
+
+  if (state?.timeout) {
+    clearTimeout(state.timeout);
+  }
+
+  progressReplies.delete(gameId);
+}
 
 async function handleDailyWordleGuess(ctx: Context, currentGuess: string) {
   const userId = ctx.from!.id.toString();

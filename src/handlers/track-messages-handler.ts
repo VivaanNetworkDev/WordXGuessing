@@ -5,6 +5,12 @@ import { redis } from "../config/redis";
 
 const composer = new Composer();
 
+const TRACKING_CACHE_TTL_MS = 30_000;
+const trackingCache = new Map<
+  string,
+  { adminChatId: string | null; expiresAt: number }
+>();
+
 const SUSPICIOUS_PATTERNS = {
   autoPlayer: /auto-player/i,
   swsCommand: /\/sws/i,
@@ -187,7 +193,16 @@ composer.use(async (ctx, next) => {
   }
 
   const trackingKey = `tracking:${ctx.chat?.id}`;
-  const adminChatId = await redis.get(trackingKey);
+  const cachedTracking = trackingCache.get(trackingKey);
+  let adminChatId = cachedTracking?.adminChatId;
+
+  if (!cachedTracking || cachedTracking.expiresAt <= Date.now()) {
+    adminChatId = await redis.get(trackingKey);
+    trackingCache.set(trackingKey, {
+      adminChatId,
+      expiresAt: Date.now() + TRACKING_CACHE_TTL_MS,
+    });
+  }
 
   if (adminChatId) {
     try {
